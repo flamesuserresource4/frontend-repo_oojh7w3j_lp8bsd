@@ -1,15 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, useScroll, useSpring } from 'framer-motion';
 
-const Navbar = () => {
+export default function Navbar() {
   const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
-
+  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 20 });
   const [scrolled, setScrolled] = useState(false);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
@@ -18,23 +14,22 @@ const Navbar = () => {
   }, []);
 
   return (
-    <header className={`fixed top-0 inset-x-0 z-50 transition-colors ${
-      scrolled ? 'backdrop-blur-xl bg-white/5 border-b border-white/10' : 'bg-transparent'
-    }`}>
-      <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
-        <a href="#hero" className="text-lg font-semibold tracking-tight text-white">flames.blue</a>
-        <nav className="hidden md:flex items-center gap-6 text-sm text-white/80">
-          <a href="#work" className="hover:text-white transition-colors">Work</a>
-          <a href="#about" className="hover:text-white transition-colors">About</a>
-          <a href="#contact" className="hover:text-white transition-colors">Contact</a>
+    <header className="fixed inset-x-0 top-0 z-40">
+      <motion.div style={{ scaleX: progress }} className="h-0.5 origin-left bg-rose-500/80" />
+      <div
+        className={`mx-auto flex max-w-6xl items-center justify-between px-4 py-3 transition-colors duration-300 ${
+          scrolled
+            ? 'backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b border-zinc-200/70'
+            : 'bg-transparent'
+        }`}
+      >
+        <a href="#home" className="font-semibold tracking-tight text-zinc-800">Creative Studio</a>
+        <nav className="hidden gap-6 md:flex">
+          <a href="#work" className="text-zinc-700 hover:text-zinc-900 transition-colors">Work</a>
+          <a href="#about" className="text-zinc-700 hover:text-zinc-900 transition-colors">About</a>
+          <a href="#contact" className="text-zinc-700 hover:text-zinc-900 transition-colors">Contact</a>
         </nav>
       </div>
-      <motion.div
-        className="h-[2px] origin-left bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-amber-300"
-        style={{ scaleX }}
-      />
     </header>
   );
-};
-
-export default Navbar;
+}
